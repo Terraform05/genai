@@ -62,6 +62,7 @@ export async function getActualUrl(CIK, formType, accessionNumber) {
 
     return null;
   } catch (error) {
+    console.log(`Error fetching or parsing FilingSummary.xml: ${error}`);
     console.error(`Error fetching or parsing FilingSummary.xml: ${error}`);
     throw error;
   }

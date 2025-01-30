@@ -45,11 +45,18 @@ export async function gptCall(prompt) {
     ) {
       return chatCompletion.choices[0].message.content.trim();
     } else {
+      console.log("Invalid response structure from OpenAI:", chatCompletion);
       console.error("Invalid response structure from OpenAI:", chatCompletion);
       return "Error: Received invalid response from OpenAI.";
     }
   } catch (error) {
     if (error instanceof OpenAI.APIError) {
+      console.log("API Error:", {
+        status: error.status,
+        message: error.message,
+        code: error.code,
+        type: error.type,
+      });
       console.error("API Error:", {
         status: error.status,
         message: error.message,

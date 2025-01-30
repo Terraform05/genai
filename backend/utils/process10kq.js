@@ -154,6 +154,7 @@ export async function process10kq(url, sectionNames = ["Discussion and Analysis"
     });
 
     if (!response.ok) {
+      console.log(`Failed to fetch the URL: ${response.statusText}`);
       throw new Error(`Failed to fetch the URL: ${response.statusText}`);
     }
 
