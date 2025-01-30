@@ -5,9 +5,9 @@ import FinancialDocuments from "./components/financialDocumentSelection";
 import UploadDocument from "./components/uploadDocument";
 import AnalyzeDocuments from "./components/analyzeDocuments";
 import CompanySearch from "./components/companySearch";
-import DynamicAnalysisSection from "./components/analysisDisplay";
 import CompanyDetails from "./components/companyDetails";
 import { Company, Filing, CompanyData } from "../public/types/types"; // Import types
+import AiAnalysisDisplay from "./components/AIAnalysisDisplay";
 
 // Function to fetch company data
 async function fetchRecentCompanyData(
@@ -86,7 +86,7 @@ export default function Home() {
     }
 
     try {
-      setLoading(true);
+      setAiAnalysisTextResponse("Querying ChatGPT...   est time: 15 sec"); // Set loading message
 
       const formData = new FormData();
 
@@ -127,7 +127,9 @@ export default function Home() {
       }
 
       const data = await response.json();
-      setAiAnalysisTextResponse(data.AiAnalysisTextResponse);
+      setAiAnalysisTextResponse(
+        data.AiAnalysisTextResponse || "No response received."
+      );
       console.log(
         "Received AiAnalysisTextResponse:",
         data.AiAnalysisTextResponse
@@ -200,11 +202,9 @@ export default function Home() {
         {uploadError && <p className="text-red-500">{uploadError}</p>}
         {loading && <p>Loading reports, please wait...</p>}
 
+        {/* Display AI Analysis Response using AiAnalysisDisplay Component */}
         {AiAnalysisTextResponse && (
-          <section className="bg-white dark:bg-gray-800 shadow-md rounded-lg p-4">
-            <h2 className="text-lg font-bold mb-2">Generated AiAnalysisTextResponse</h2>
-            <pre className="whitespace-pre-wrap">{AiAnalysisTextResponse}</pre>
-          </section>
+          <AiAnalysisDisplay analysisResponse={AiAnalysisTextResponse} />
         )}
       </main>
     </div>

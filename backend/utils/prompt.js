@@ -1,8 +1,12 @@
 export function generatePrompt(companyInfo, processedFileText) {
-  const analysisPrompt = `Please help me analyze the following excerpts from the company ${companyInfo.name} in the ${companyInfo.industry} industry, to evaluate the bull vs bear case for the stock. For each category below, please:
-1. Rate it on a scale of 1-5 (1 being very bearish, 5 being very bullish)
+  const analysisPrompt = `If no filing data is provided, use the most recent knowledge available to return a complete response as if the data were available. Ensure the analysis is detailed and follows the same structure.
+
+  Analyze the following excerpts from the company ${companyInfo.name} in the ${companyInfo.industry} industry to evaluate both the credit and equity bull vs bear case. Do not include any introductory or concluding remarks—only provide the analysis.
+
+1. Rate it separately for credit and equity on a scale of 1-5/5 bull/bear with 1 being very bearish, 5 being very bullish
 2. Provide key supporting evidence from the provided document text (include page numbers from the text)
 3. Flag any significant risks or concerns
+4. Ratings should be based on the information provided in the text
 
 Key areas to analyze:
 
@@ -48,12 +52,16 @@ Growth Investments:
 - New product pipeline
 - Market expansion initiatives
 
-After analyzing these categories, please:
-1. Provide an overall bull/bear rating (1-5)
-2. List the top 3 bull and bear considerations
-3. Identify key metrics to monitor going forward
-4. Flag any potential catalysts (both positive and negative)
-5. Note areas where additional research beyond the 10-K would be valuable`;
+After analyzing these categories, provide:
+
+1. An overall bull/bear rating (1-5/5 bull/bear) separately for both credit and equity
+2. The top 3 bull and bear considerations for both credit and equity
+3. Key metrics to monitor going forward
+4. Potential catalysts (both positive and negative)
+5. Areas where additional research beyond the 10-K would be valuable
+
+Do not include any extra wording or explanations outside of the requested analysis.
+`;
 
   return `${analysisPrompt}\n\n${processedFileText}`;
 }

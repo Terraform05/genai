@@ -21,12 +21,12 @@ export async function gptCall(prompt) {
         {
           role: "system",
           content:
-            "You are an assistant specialized in financial analyst, evaluating corporate financial filings and providing detailed insights on bear and bull signals for both stock equity and credit.",
+            "You are an assistant specialized in financial analysis, evaluating corporate financial filings and providing detailed insights on bear and bull signals for both stock equity and credit.",
         },
         { role: "user", content: prompt },
       ],
-      max_tokens: 1000, // Adjust as needed
-      temperature: 0.7,
+      max_tokens: 2000, // Adjust as needed
+      temperature: 0.2,
       top_p: 1,
       frequency_penalty: 0,
       presence_penalty: 0,
@@ -35,8 +35,19 @@ export async function gptCall(prompt) {
     // Send request to OpenAI API
     const chatCompletion = await client.chat.completions.create(params);
 
-    // Return the model's response
-    return chatCompletion.choices[0].message.content.trim();
+    // Validate response and extract text
+    if (
+      chatCompletion &&
+      chatCompletion.choices &&
+      chatCompletion.choices.length > 0 &&
+      chatCompletion.choices[0].message &&
+      typeof chatCompletion.choices[0].message.content === "string"
+    ) {
+      return chatCompletion.choices[0].message.content.trim();
+    } else {
+      console.error("Invalid response structure from OpenAI:", chatCompletion);
+      return "Error: Received invalid response from OpenAI.";
+    }
   } catch (error) {
     if (error instanceof OpenAI.APIError) {
       console.error("API Error:", {
@@ -45,10 +56,10 @@ export async function gptCall(prompt) {
         code: error.code,
         type: error.type,
       });
-      throw new Error(`GPT API error: ${error.message}`);
+      return `GPT API error: ${error.message}`;
     } else {
       console.error("Unexpected Error:", error);
-      throw new Error("An unexpected error occurred. Please try again.");
+      return "An unexpected error occurred. Please try again.";
     }
   }
 }

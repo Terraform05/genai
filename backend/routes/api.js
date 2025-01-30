@@ -82,9 +82,10 @@ router.post("/analyze", upload.array("uploadedFiles"), async (req, res) => {
     );
 
     // Call GPT API or mock response
-    const AiAnalysisTextResponse = prompt;
-
+    const AiAnalysisTextResponse = await gptCall(prompt); // for testing, replace with = prompt;
+    
     res.status(200).json({ AiAnalysisTextResponse });
+
   } catch (error) {
     console.error("Error analyzing documents:", error);
     res.status(500).json({ error: "Failed to analyze documents." });
