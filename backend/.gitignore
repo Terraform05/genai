@@ -16,6 +16,3 @@ yarn-error.log*
 
 # Miscellaneous
 coverage/
-
-# Data directory if sensitive
-data/
