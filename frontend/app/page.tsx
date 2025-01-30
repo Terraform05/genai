@@ -85,8 +85,34 @@ export default function Home() {
       return;
     }
 
+    let intervalId: NodeJS.Timeout | null = null;
     try {
-      setAiAnalysisTextResponse("Querying ChatGPT...   est time: 15 sec"); // Set loading message
+      setUploadError(null); // Clear previous errors
+
+      let secondsElapsed = 0;
+
+      // Function to update the loading message
+      const updateLoadingMessage = () => {
+        secondsElapsed += 1;
+        let message = "";
+
+        if (secondsElapsed <= 2) {
+          message = `Retrieving filings... (${secondsElapsed}/15 Seconds Remaining)`;
+        } else if (secondsElapsed <= 7) {
+          message = `Processing filings... (${secondsElapsed}/15 Seconds Remaining)`;
+        } else {
+          message = `Analyzing filings... (${secondsElapsed}/15 Seconds Remaining)`;
+        }
+
+        setAiAnalysisTextResponse(message);
+      };
+
+      // Start updating the loading message every second
+      intervalId = setInterval(() => {
+        if (secondsElapsed < 15) {
+          updateLoadingMessage();
+        }
+      }, 1000);
 
       const formData = new FormData();
 
@@ -95,7 +121,7 @@ export default function Home() {
         const filingsData = JSON.stringify(
           filings.filter((filing) => selectedItems.includes(filing.formType))
         );
-        console.log("Filings Data:", filingsData); // Debugging step
+        console.log("Filings Data:", filingsData);
         formData.append("selectedFilings", filingsData);
       }
 
@@ -110,10 +136,9 @@ export default function Home() {
         industry: companyData?.sicDescription,
       };
       const companyDataString = JSON.stringify(companyDataBody);
-      console.log("Company Data:", companyDataString); // Debugging step
+      console.log("Company Data:", companyDataString);
       formData.append("companyData", companyDataString);
 
-      // Log the complete FormData
       console.log("Form Data:", formData);
 
       // Send to the backend
@@ -127,6 +152,12 @@ export default function Home() {
       }
 
       const data = await response.json();
+
+      // Stop updating the loading message
+      if (intervalId) {
+        clearInterval(intervalId);
+      }
+
       setAiAnalysisTextResponse(
         data.AiAnalysisTextResponse || "No response received."
       );
@@ -143,6 +174,7 @@ export default function Home() {
       setLoading(false);
     }
   };
+
 
 
   const validateFiles = (files: FileList) => {
