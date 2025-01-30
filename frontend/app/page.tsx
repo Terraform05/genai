@@ -164,7 +164,7 @@ export default function Home() {
     <div className="min-h-screen bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 p-4">
       <header className="bg-blue-600 text-white py-2 text-center rounded-md mb-4">
         <div className="flex flex-col items-center w-full">
-          <h1 className="text-3xl font-extrabold">SEC AI</h1>
+          <h1 className="text-3xl font-extrabold">CFT GENAI</h1>
         </div>
       </header>
 
